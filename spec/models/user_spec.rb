@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
 
-  subject { User.new(name: "hello", email: 'rahul@gmail.com') }
+  subject { User.new(name: "hello", email: 'rahul@gmail.com',
+                      password: "foobar", password_confirmation: "foobar" ) }
   it "should be valid" do
     expect(subject).to be_valid
   end
@@ -66,6 +67,16 @@ RSpec.describe User, type: :model do
     subject.email = mixed_case_email
     subject.save
     expect(subject.email).to match(mixed_case_email.downcase)
+  end
+
+  it "password should be valid" do
+      subject.password = subject.password_confirmation = " "
+      expect(subject).not_to be_valid
+  end
+
+  it "password should have a minimum length" do
+    subject.password = subject.password_confirmation = "a"*6
+    expect(subject).to be_valid
   end
 
 end
